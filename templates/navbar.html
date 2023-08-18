@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% include 'base.html' %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="width=device-width,initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
+  <style>
+    
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Blog Lite</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <img src="{{current_user.image}}"  alt="#" width="44" height="44" style="border-radius:50%">
+           </li>
+           <li class="nav-item">
+            <label class="nav-text">Welcome {{current_user.fname}} {{current_user.lname}}</label>
+          </li>          
+          &emsp; &emsp; &emsp;
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{{url_for('dashboard',username=current_user.username)}}">News Feed</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/profile/{{current_user.username}}">My Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/add_post/{{current_user.username}}">Add Post</a>
+          </li>
+          
+        </ul>
+        <ul class="navbar-nav mr-auto float-sm-right">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+          </li>
+          </ul>
+
+        <form action="{{url_for('search',username=current_user.username)}}" class="form-inline float-sm-right my-2 my-lg-0" method="POST" style="padding-top: 8px;">
+          {{ search_form.hidden_tag()}}
+          {{ search_form.searched(class="form-control mr-sm-2", placeholder="Search") }}
+          {{ search_form.submit(class="btn btn-outline-success my-2 my-sm-0") }}
+
+        </form>          
+        
+      </div>
+    </div>
+    </nav>
+</body>
+<script type="text/javascript">
+  const activePage = window.location.pathname;
+  console.log(activePage);
+  const navLinks = document.querySelectorAll('nav a')
+          .forEach(link => {
+                if(link.href.includes(activePage)){
+                link.classList.add('active');
+                  }
+          })                
+</script>
+</html>

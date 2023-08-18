@@ -1,0 +1,287 @@
+{% include 'navbar.html' %}
+{% include 'base.html' %}
+
+<html lang="en">
+ 
+<head>    
+    
+    <title>Dashboard</title>
+    
+</head>
+<body>  
+    
+    <div id="snipperContent">         
+         
+        <div class="container-fluid" style="padding: 0% 7%;">
+             
+            {% include 'message.html' %}
+            
+        <div class="row">
+            <div class="col-xs-12 col-md-2 col-lg-3">
+                <div class="userProfileInfo">
+                    
+                    <div class="box">
+                        <div class="image text-center">
+                            <img src="{{current_user.image}}" alt="../static/default_dp.png" class="img-responsive">
+                            
+                        </div>
+                        
+                        <div class="name">
+                            <div style="font-weight:bold;font-size: 20px;text-align: center;">{{current_user.fname}} {{current_user.lname}}
+                            </div>
+                        </div>
+                        <div class="info">
+                            <span><i class="fa-solid fa-user-graduate"></i>&nbsp;{{current_user.profession}}</span>                            
+                            <span><i class="fa-sharp fa-solid fa-location-dot"></i>&nbsp; {{current_user.location}}</span>
+                            <span><i class="fa-solid fa-envelope"></i> <a href="mailto:{{current_user.email}}" title="e-mail">&nbsp;{{current_user.email}}</a></span>
+                        </div>
+                        <div class="stats" style="padding:10px 0px 5px; border-bottom: 2px solid #e6e7ed;">
+                            <div class="row" style="padding-left: 25px;" >
+                                <!-- <div class="col-md-4 mb20">
+                                    <h4>{{current_user.user_id in blog|map (attribute='user_id')|list }}</h4>
+                                    <h5 class="text-small"><strong>Posts</strong></h5>
+                                </div> -->
+                                <div class="col-md-4 mb20">
+                                    <h4>{{total_followers|length}}</h4>
+                                    <h5 class="text-small"><strong>Followers</strong></h5>
+                                </div>
+                                <div class="col-md-4 mb20">
+                                    <h4>{{total_following|length}}</h4>
+                                    <h5 class="text-small"><strong>Following</strong></h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="all_connections">                 
+                            <div class="profile-picture" style="border-top:10px">
+                                <strong style="padding-left: 25px">Followers</strong>
+                                <div class="profile-picture-block">
+                                {% for i in total_followers %}
+                                    <div class="profile-page-block" style="float:left;margin-left: 10px;margin-bottom:10px;margin-right:5px">
+                                        <div class="profile-picture bg-gradient">
+                                            <a href="/profile/{{i.follower.username}}"><img title="{{i.follower.fname}} {{i.follower.lname}}" src={{i.follower.image}} width="44" height="44"></a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>    
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-xs-12 col-md-8 col-lg-9">
+                <div class="box">
+                   <div class="row">
+                        <div class="column col-lg-9">
+                            <h2 class="boxTitle">News Feed</h2>
+                        </div>                        
+                    </div>
+
+                    <!-- Activities -->
+                    <div role="tabpanel" class="tab-pane fade active in" id="tab-item-2">
+                        <div class="userActivities">
+                            {% if blog|length == 0 %}
+                                <h3><p>You are not following any user. Please follow to view blogs</p></h3>
+                                {% endif %}
+                            {% for blogs in blog %}                            
+                            <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle"><strong>Likes</strong></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {% set count=namespace(value=1) %}
+                                        {% for u in user %}
+                                            {% if u.user_id in blogs.likes|map (attribute='user_id')|list %}
+                                                {{count.value}}
+                                                {% set count.value =count.value+1 %}
+                                                <a href='/profile/{{u.username}}'>{{u.fname}} {{u.lname}}</a>
+                                                <br>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="i">                                    
+                                <a href="#" title="#" class="image">
+                                    <img src="{{blogs.user.image}}" alt="#" width="44" height="44">
+                                </a>
+                                
+                                <div class="activityContent">
+                                    
+                                    <ul class="simpleListings status">
+                                        <li>
+                                            
+                                            <div class="title">
+                                                {% if blogs %}
+                                                <a href="/profile/{{blogs.user.username}}" title="#">{{blogs.user.fname}} {{blogs.user.lname}}</a> 
+                                                {% if current_user.is_following(blogs.user) %}
+                                                    &nbsp;<label style="background-color: darkgray; font-style: italic; 
+                                                    color:black; border-style:groove;font-size: 15px; font-weight: lighter;">Following</label>
+                                                    {% endif %}
+                                                    
+                                                <br> <h5>Title: {{blogs.title}} | Category: {{blogs.category}}</h5>
+                                                {% endif %}
+                                                
+                                            </div>
+                                            <div class="info">
+                                                
+                                                {% if (date - blogs.date_created).days == 1 %}
+                                                    {{ (date - blogs.date_created).days}} day ago
+
+                                                {% elif (date - blogs.date_created).days > 1 %}
+                                                    {{ (date - blogs.date_created).days}} days ago
+
+                                                {% elif (date - blogs.date_created).total_seconds() / 3600 == 1 %}                                                        
+                                                {{ ((date - blogs.date_created).days * 24 + (date - blogs.date_created).seconds) // 3600 }} hour ago
+
+                                                {% elif (date - blogs.date_created).total_seconds() / 3600 >= 1 %}                                                        
+                                                {{ ((date - blogs.date_created).days * 24 + (date - blogs.date_created).seconds) // 3600 }} hours ago
+                                                
+                                                {% elif (date - blogs.date_created).total_seconds() / 3600 < 1 
+                                                        and (date - blogs.date_created).seconds % 3600 // 60 >= 1  %}  
+                                                        {{ (date - blogs.date_created).seconds % 3600 // 60 }} minutes ago
+                                                
+                                                {% elif (date - blogs.date_created).seconds % 3600 // 60 < 1 and 
+                                                    (date - blogs.date_created).seconds % 60 >0 %}  
+                                                    {{ (date - blogs.date_created).seconds % 60}} seconds ago      
+
+                                                {% endif %}
+                                                
+
+                                                </div>
+                                                
+                                            {% if blogs %}
+                                            <div class="row gx-3 mb-4">
+                                            <div class = "column1">
+                                                    <p> {{blogs.content | safe}}</p>
+                                            </div>
+                                            <div class = "column2">
+                                                <img src={{blogs.blog_file}}>
+                                            </div>
+                                        </div>
+                                            {% endif %}
+                                        
+                                            <div class="share">
+                                                
+                                                {% if current_user.user_id in blogs.likes|map (attribute='user_id')|list %}                                                        
+                                                    <i  data-member_id = {{blogs.id}} id="like-button-{{blogs.id}}" class="fas fa-heart like-icon-{{blogs.id}}" ></i>
+
+                                                        <a  href="#" title="#"  style="margin-left: 1px;" id="like-count-{{blogs.id}}">{{blogs.likes | length}} likes</a>
+                                                {% else %} 
+                                                    <i data-member_id = {{blogs.id}} id="like-button-{{blogs.id}}" class="far fa-heart like-icon-{{blogs.id}}" ></i> 
+
+                                                    <a  href="#" title="#"  style="margin-left: 1px;" id="like-count-{{blogs.id}}">{{blogs.likes | length}} likes</a>   
+                                                {% endif %}    
+                                                <i style="margin-left: 10px;" aria-hidden="true" class="fa fa-comments"></i>
+                                                <a href="#" style="margin-left: 2px;" id="comment-count-{{blogs.id}}"  title="#"> {{blogs.comments | length}} comments</a>
+                                                
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    
+                                    
+                                    <!-- Comments -->
+                                    <ul class="simpleListings comments" id="comment-{{blogs.id}}"  >
+                                        
+                                        <li class="showComments" >
+                                            <a href="#collapse-{{blogs.id}}" title="Show Comments" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fa fa-comments"></i> Show <strong id="comment-count-{{blogs.id}}">{{blogs.comments | length}} comments</strong></a>
+                                        </li>
+                                        <div class="collapse" id="collapse-{{blogs.id}}">
+                                        {% for comments in comment %}
+                                            {% if comments.post_id==blogs.id %}
+                                        
+                                            <li id="comment-delete-{{comments.id}}" >
+                                                <a href="#" title="#" class="image">
+                                                    <img src="{{comments.user.image}}" alt="#" width="44" height="44">
+                                                </a>
+                                                <div class="c" >
+                                                    <div class="title"><a href="/profile/{{comments.user.username}}" title="#">{{comments.user.fname}} {{comments.user.lname}}</a>
+                                                        
+                                                    </div>
+                                                    <div class="info">
+                                                        {% if (date - comments.date_created).days == 1 %}
+                                                        {{ (date - comments.date_created).days}} day ago
+
+                                                        {% elif (date - comments.date_created).days >= 1 %}
+                                                        {{ (date - comments.date_created).days}} days ago
+
+                                                        {% elif (date - comments.date_created).total_seconds() / 3600 == 1 %}                                                        
+                                                        {{ ((date - comments.date_created).days * 24 + (date - comments.date_created).seconds) // 3600 }} hour ago
+
+                                                        {% elif (date - comments.date_created).total_seconds() / 3600 >= 1 %}                                                        
+                                                        {{ ((date - comments.date_created).days * 24 + (date - comments.date_created).seconds) // 3600 }} hours ago
+                                                    
+                                                        {% elif (date - comments.date_created).total_seconds() / 3600 < 1 
+                                                                and (date - comments.date_created).seconds % 3600 // 60 >= 1  %}  
+                                                                {{ (date - comments.date_created).seconds % 3600 // 60 }} minutes ago
+                                                    
+                                                        {% elif (date - comments.date_created).seconds % 3600 // 60 < 1 and 
+                                                            (date - comments.date_created).seconds % 60 >0 %}  
+                                                            {{ (date - comments.date_created).seconds % 60}} seconds ago      
+
+                                                    {% endif %}
+                                                    </div >
+
+                                                    <p >{{comments.text}}
+                                                        <i id={{comments.id}} blog_id = {{blogs.id}} title="delete" class="delete_comment fa-sharp fa-solid fa-trash float-sm-right"></i>
+                                                    </p>
+                                                </div>
+
+                                            </li>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <li >
+                                            <a href="#" title="#" class="image">
+                                                <img src="{{current_user.image}}"  alt="#" width="44" height="44">
+                                            </a>
+                                            <div class="c">
+                                                <form action="/add_comment/{{blogs.id}}"  id="comment-form-{{blogs.id}}" method="POST">
+
+                                                    {{ form.hidden_tag() }}
+
+                                                        {{ form.comment(id= "blog-"~ blogs.id, class="form-control js-autogrow", rows="2", placeholder="Start typing here...", style="overflow: hidden; word-wrap: break-word; height: 42px;") }}
+                                                        
+                                                        {{ form.submit(member_id=blogs.id, class="comment btn btn-primary") }}
+                                                    
+                                                </form>
+                                                
+                                            </div>
+                                        </li>
+                                    
+                                        
+                                    </ul>
+                                        
+                                </div>
+                                
+                            </div>
+                            
+                            {% endfor %}
+                            
+
+                            
+                        </div>
+                    </div>        
+                </div>
+            </div>
+        </div>
+        </div>
+    </div> 
+</body>
+<script type="text/javascript" src="{{url_for('static',filename='js/custom_validations.js')}}"></script>
+<script type="text/javascript">
+    initialize();                           
+</script>
+
+</html>

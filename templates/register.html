@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+    <!-- Our CSS -->
+    <!-- <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet"> -->
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		window.setTimeout("document.getElementById('successMessage').style.display='none';", 5000); </script>
+	
+	<title>Blog Lite - Registration</title>
+	<style>
+		.inner-addon { 
+		position: relative; 
+		}
+		/* style icon */
+		.inner-addon .glyphicon {
+		position: absolute;
+		padding: 10px;
+		pointer-events: none;
+		}
+		#password + .glyphicon {
+		cursor: pointer;
+		pointer-events: all;
+		}
+		/* align icon */
+		.left-addon .glyphicon  { left:  0px;}
+		.right-addon .glyphicon { right: 0px;}
+
+		/* add padding  */
+		.left-addon input{ padding-left:  30px; }
+		.right-addon input{ padding-right: 30px; }
+	</style>
+  </head>
+<body>
+	<section class="vh-100" style="background-color: rgb(45, 122, 148); position: relative; width: 100%; height: fit-content;">
+		<h1  style="text-align:center; padding-top: 0.7rem; color:white; background-color:#333333; height: 60px; margin-top: 0px;">Welcome to Blog Lite</h1>
+		<div class="container" style="margin-top: 50px;">			
+		  <div class="row d-flex justify-content-center align-items-center h-100">
+			<div class="col col-xl-12">
+			  <div class="card" style="border-radius: 1rem;">
+				<div class="row g-0">
+				  <div class="col-md-6 col-lg-6 d-none d-md-block">
+					<img src="../static/Images/login_image2.jpg"
+					  alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem; height: 700px;" />
+				  </div>
+				  <div class="col-md-7 col-lg-6" style="padding-top: 5px;">
+					<div class="card-body text-black" style="padding-right: 10%;">
+	  
+					  <form method="POST" enctype="multipart/form-data">
+						{{ form.hidden_tag() }}
+
+						<h1 class="fw-bold mb-5 pb-4" style="letter-spacing: 1px;text-align: center; margin-top: auto;">Registration Form</h1>
+	  
+						<div class="form-outline mb-4 inner-addon left-addon">
+							<i class="glyphicon glyphicon-user"></i>
+							{{ form.fname(class="form-control",placeholder="First Name") }}					
+						</div>
+						<div class="form-outline mb-4 inner-addon left-addon">
+							<i class="glyphicon glyphicon-user"></i>
+							{{form.lname(class="form-control ",placeholder="Last Name") }}						
+						</div>
+						<div class="form-outline mb-4 inner-addon left-addon">
+							<i class="glyphicon glyphicon-user"></i>
+							{{ form.username(class="form-control",placeholder="Username") }}
+							{% for errors in form.username.errors %}
+								<span style="color: red;">{{ errors }}</span>									
+								{% endfor %}								
+						</div>
+
+						<div class="form-outline row mb-4 inner-addon left-addon">
+							<div class="col-md-8">
+								<i class="glyphicon glyphicon-envelope" style="padding-left:25px"></i>
+								{{ form.email(class="form-control",placeholder="Email") }}
+								{% for errors in form.email.errors %}
+									<span style="color: red;">{{ errors }}</span>									
+								{% endfor %}		
+
+							</div>	
+							<div class="col-md-4">
+								<i class="glyphicon glyphicon-calendar" style="padding-left:25px"></i>
+								{{ form.dob(class="form-control ", title="Date of Birth", type="date") }}	
+							</div>							
+						</div>
+
+						<div class="form-outline row mb-4 inner-addon left-addon">
+							<div class="col-md-6">
+								<i class="glyphicon glyphicon-education" style="padding-left:25px"></i>
+								{{ form.profession(class="form-control",placeholder="Profession") }}
+							</div>	
+							<div class="col-md-6">
+								<i class="glyphicon glyphicon-map-marker" style="padding-left:25px"></i>
+								{{ form.location(class="form-control",placeholder="Location") }}
+							</div>							
+						</div>
+
+						<div class="form-outline mb-4 inner-addon">	
+							<i class="glyphicon glyphicon-lock" style="left:0px;"></i>
+							{{ form.password_hash(class="form-control",id="password",placeholder="Password",style="padding-left:30px",onkeyup='check();') }}
+							<i class="glyphicon glyphicon-eye-close" style="right:0px; padding-right:20px"></i>
+							{% for error in form.password_hash.errors %}
+								<span style="color: red;">{{ error }}</span>
+								{% endfor %}
+						</div>
+						<div class="form-outline mb-4 inner-addon">	
+							<i class="glyphicon glyphicon-lock" style="left:0px;"></i>
+							{{ form.password_hash2(class="form-control",id="confirm_password",placeholder="Retype Password",style="padding-left:30px",onkeyup='check();') }}
+							<i class="glyphicon glyphicon-remove" id="message" style="right:0px; padding-right:20px; color:red"></i>
+							
+							{% for error in form.password_hash2.errors %}
+								<span style="color: red;">{{ error }}</span>
+								{% endfor %}
+						</div>
+						<div class="form-outline mb-4">	
+							{{form.profile_pic.label()}}
+							{{ form.profile_pic(class="form-control",id="img",title="Add Picture here") }}
+							{% for error in form.profile_pic.errors %}
+								<span style="color: red;">{{ error }}</span>
+								{% endfor %}
+						
+							
+							
+						</div>							
+	  
+						<div class="pt-1 mb-4 col-md-5" style="text-align: center;margin-left: 30%;" >
+						  {{ form.submit(class="btn btn-dark btn-lg btn-block") }}
+						</div>	
+					  </form>
+					  
+					  	
+					</div>
+					<br><br>
+					<div class="card-body text-black" style="color: #393f81; position: fixed; padding-top: 0px; padding-left:2%;">
+						<span>Already have an account? 
+							<a href="{{url_for('login')}}" style="color: #393f81;">Login here
+							</a></span>
+					   </div>
+					
+					
+					
+				  </div>
+				  
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  
+		</div>
+	
+	  </section>
+</body>
+<script>
+	// toggle password visibility
+	$('#password + .glyphicon').on('click', function() {
+	$(this).toggleClass('glyphicon-eye-close').toggleClass('glyphicon-eye-open'); 
+
+	var type = document.getElementById("password").type;
+			if(type=='password'){
+			document.getElementById("password").type = "text";
+			}else{
+			document.getElementById("password").type = "password";
+			}
+	});
+
+	var check = function() {
+	if (document.getElementById('password').value ==
+		document.getElementById('confirm_password').value & document.getElementById('confirm_password').value!= '' ) {
+		document.getElementById('message').style.color = 'green';
+		document.getElementById('message').className = 'glyphicon glyphicon-ok';
+	} else {
+		document.getElementById('message').style.color = 'red';
+		document.getElementById('message').className = 'glyphicon glyphicon-remove'
+		// document.getElementById('message').innerHTML = 'not matching';
+	}
+}
+
+</script>
+</html> 
+

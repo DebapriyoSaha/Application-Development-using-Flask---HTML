@@ -1,0 +1,99 @@
+{% include 'navbar.html' %} 
+{% include 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+      
+<head>
+     
+    <title>Add Post</title>
+    
+</head>
+<body>  
+    
+    <div id="snipperContent" style="height:855px">         
+         
+        <div class="container-fluid" style="padding: 0% 7%;">
+            
+
+        <div class="row">
+            <div class="col-xs-12 col-md-2 col-lg-3">
+                <div class="userProfileInfo" >
+                    
+                    <div class="box" style="height:620px">
+                        <div class="image text-center">
+                        
+                            <img src="{{current_user.image}}" alt="../static/default_dp.png" class="img-responsive">
+                        </div>
+
+                        <div class="name"><div style="font-weight:bold;font-size: 20px;text-align: center;">{{current_user.fname}} {{current_user.lname}}</div>
+                            <br>
+                            <a href="{{ url_for('edit_profile',username=current_user.username) }}"  class="button btn btn-primary">Edit Profile</a>
+                            </a>
+                        </div>
+                        
+                        <div class="info">
+                            <span><i class="fa-solid fa-user-graduate"></i>&nbsp;{{current_user.profession}}</span>
+                            <span><i class="fa-solid fa-envelope"></i> <a href="mailto:{{current_user.email}}" title="e-mail">&nbsp;{{current_user.email}}</a></span>
+                            <span><i class="fa-sharp fa-solid fa-location-dot"></i>&nbsp; {{current_user.location}}</span>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xs-12 col-md-8 col-lg-9">
+                <div class="box">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                                <strong>Add Post</strong>
+                        </div>
+                        <div class="card-body shadow p-3 mb-8">                   
+                            
+                                
+                                    <form method="POST" enctype="multipart/form-data">
+                                        {{ form.hidden_tag() }}
+                                
+                                        {{ form.title.label(class="form-label") }}
+                                
+                                        {{ form.title(class="form-control") }}
+                                        <br>                                    
+
+                                        <div class="row gx-3 mb-3">
+                                            
+                                            <div class="col-md-6">
+                                                {{ form.category.label(class="form-label")}}
+                                                {{ form.category(class="form-control",style="height:35px;") }}
+                                            </div>
+                                        
+                                            <div class="col-md-6">
+                                                {{form.image.label()}}
+                                                {{ form.image(class="form-control",id="img",title="Add Image") }}
+                                                {% for errors in form.image.errors %}
+									                <span style="color: red;">{{ errors }}</span>									
+								                {% endfor %}	
+                                            </div>
+                                        </div>
+                                        <br>
+                                        {{ form.content.label(class="form-label") }}
+                                
+                                        {{ form.content(class="form-control", rows="10") }}
+                                        <br>
+                                
+                                        
+                                        {{ form.submit(class="btn btn-primary") }}
+                                
+                                
+                                    </form>
+                                    {{ ckeditor.load() }}
+                                    {{ ckeditor.config(name='content') }}
+                                
+                        </div>
+                    
+                    </div> 
+                </div>
+            </div>
+       
+        </div>
+    </div> 
+</body>
+</html>
